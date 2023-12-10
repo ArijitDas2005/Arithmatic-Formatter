@@ -1,86 +1,49 @@
-def arithmetic_arranger(problems, see = True):
+def arithmetic_arranger(problems, display_result=False):
+    # Check if the number of problems is valid
+    if len(problems) > 5:
+        return "Error: Too many problems."
 
-  first_operand = list()
-  operator = list()
-  second_operand = list()
-  max_length = list()
-  dashes = list()
-  operation = list()
-  upper_part = ""
-  lower_part = ""
-  dashesline = ""
-  results = ""
-  index = 0
+    # Initialize variables to store formatted strings for each line
+    line1 = ""
+    line2 = ""
+    line3 = ""
+    line4 = ""
 
-  # Get the length of the list, if it is higher than 5, print an error 
-  if len(problems) > 5:
-    print(" Error: Too many problems")
+    # Loop through each problem
+    for problem in problems:
+        # Split the problem into operands and operator
+        operand1, operator, operand2 = problem.split()
 
-  # Divide the list into sub lists
-  for increment in problems:
-    new_item = increment.split()
+        # Check if the operands are valid integers
+        if not operand1.isdigit() or not operand2.isdigit():
+            return "Error: Numbers must only contain digits."
 
-    # Assign first, second operand and operator
-    first_operand.append(new_item[0])
-    operator.append(new_item[1])
-    second_operand.append(new_item[2])
+        # Check if the operator is valid
+        if operator not in ['+', '-']:
+            return "Error: Operator must be '+' or '-'."
 
-  # Checking if the operands are only digits (must be separated into 
-  # two different for loops if we do not want to see the error written 4 times)
-  for go_over in first_operand:
-    if not go_over.isnumeric():
-      print("Error: Numbers must only contain digits")
-  for go_over in second_operand:
-    if not go_over.isnumeric():
-      print("Error: Numbers must only contain digits")
+        # Calculate the result
+        result = str(eval(problem))
 
-  # Checking if numbers are not above 4 digits (must be separated into 
-  # two different for loops if we do not want to see the error written 4 times)
-  for go_over in first_operand:
-    if len(go_over) > 4:
-      print("Error: Numbers cannot be more than four digits")
-  for go_over in second_operand:
-    if len(go_over) > 4:
-      print("Error: Numbers cannot be more than four digits")
-        
-  # Checking if the operator is a '+' or a '-'
-  for go_over in operator:
-    index += 1
-    if go_over == "*" or go_over == "/":
-      print("Error: Operator must be '+' or '-'")
-    # Doing the calculation for '+' and '-'
-    elif go_over == "+":
-      operation.append(str(int(first_operand[index-1]) + int(second_operand[index-1])))
-    elif go_over == "-":
-      operation.append(str(int(first_operand[index-1]) - int(second_operand[index-1])))
+        # Find the maximum length of operands
+        width = max(len(operand1), len(operand2)) + 2
 
-  for go_over in range(len(first_operand)):
-    max_length.append(max(len(first_operand[go_over]),len(second_operand[go_over])))
-    dashes.append("-"*(2+max_length[go_over]))
-  
-  for go_over in range(len(first_operand)):
-    if see == True:
-      if go_over == 0:
-        upper_part += first_operand[go_over].rjust(2+max_length[go_over])
-        lower_part += operator[go_over].ljust(0) + " " + second_operand[go_over]
-        dashesline += dashes[go_over]
-        results += operation[go_over].rjust(2+max_length[go_over])
-      else:
-        upper_part += "    " + first_operand[go_over].rjust(2+max_length[go_over])
-        lower_part += "    " + operator[go_over].ljust(0) + " " + second_operand[go_over].rjust(max_length[go_over])
-        dashesline += "    " + dashes[go_over]
-        results += "    " + operation[go_over].rjust(2+max_length[go_over])
-        
-      arranged_problems = upper_part + "\n" + lower_part + "\n" + dashesline + "\n" + results
+        # Build each line of the formatted output
+        line1 += operand1.rjust(width) + '    '
+        line2 += operator + operand2.rjust(width - 1) + '    '
+        line3 += '-' * width + '    '
+        line4 += result.rjust(width) + '    '
 
-    else:
-      if go_over == 0:
-        upper_part += first_operand[go_over].rjust(2+max_length[go_over])
-        lower_part += operator[go_over].ljust(0) + " " + second_operand[go_over]
-      else:
-        upper_part += "    " + first_operand[go_over].rjust(2+max_length[go_over])
-        lower_part += "    " + operator[go_over].ljust(0) + " " + second_operand[go_over].rjust(max_length[go_over])
-        
-      arranged_problems = upper_part + "\n" + lower_part
-    
+    # Combine the lines into the final formatted output
+    arranged_problems = line1.rstrip() + '\n' + line2.rstrip() + '\n' + line3.rstrip()
+
+    # Add the result line if display_result is True
+    if display_result:
+        arranged_problems += '\n' + line4.rstrip()
+
     return arranged_problems
+
+# Example usage:
+problems = ["32 + 698", "3801 - 2", "45 + 43", "123 + 49"]
+formatted_problems = arithmetic_arranger(problems, display_result=True)
+print(formatted_problems)
